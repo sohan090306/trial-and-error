@@ -1,0 +1,18 @@
+erDiagram
+  USERS ||--o| ADMINS : owns
+  USERS ||--o| MEMBERS : authenticates
+  USERS ||--o| TRAINERS : authenticates
+  TRAINERS ||--o{ MEMBERS : coaches
+  MEMBERS ||--o{ MEMBER_MEMBERSHIPS : subscribes
+  MEMBERSHIPS ||--o{ MEMBER_MEMBERSHIPS : defines
+  MEMBERS ||--o{ ATTENDANCE : records
+  MEMBERS ||--o{ WORKOUT_PLANS : follows
+  TRAINERS ||--o{ WORKOUT_PLANS : creates
+  MEMBERS ||--o{ DIET_PLANS : receives
+  MEMBERS ||--o{ PAYMENTS : pays
+  MEMBERS ||--o{ FITNESS_LOGS : tracks
+  MEMBERS ||--o{ AI_PREDICTIONS : receives
+  MEMBERS ||--o{ LEADERBOARD : ranks
+  CHALLENGES ||--o{ LEADERBOARD : scores
+  ACHIEVEMENTS ||--o{ MEMBER_ACHIEVEMENTS : unlocks
+  MEMBERS ||--o{ MEMBER_ACHIEVEMENTS : earns

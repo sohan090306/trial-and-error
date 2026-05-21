@@ -1,0 +1,22 @@
+{
+  "name": "nexafit-ai-smart-gym-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI-powered smart gym management and fitness intelligence platform.",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace backend\" \"npm run dev --workspace frontend\" \"python ai-service/run.py\"",
+    "install:all": "npm install --workspaces",
+    "backend": "npm run dev --workspace backend",
+    "frontend": "npm run dev --workspace frontend"
+  },
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "overrides": {
+    "esbuild": "^0.28.0"
+  }
+}
