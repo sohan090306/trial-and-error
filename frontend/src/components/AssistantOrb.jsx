@@ -7,14 +7,28 @@ export function AssistantOrb() {
   ]);
   const [input, setInput] = useState('');
 
-  function send() {
+  async function send() {
     const text = input.trim();
     if (!text) return;
-    let reply = 'I recommend a balanced strength block, high-protein nutrition, and recovery monitoring.';
-    if (text.toLowerCase().includes('chest')) reply = 'Chest protocol: incline press, flat dumbbell press, cable fly, dips, push-up burnout.';
-    if (text.toLowerCase().includes('calories')) reply = 'Start with bodyweight in kg x 28 for fat loss or x 34 for muscle gain, then adjust weekly.';
-    setMessages((old) => [...old, { from: 'user', text }, { from: 'ai', text: reply }]);
+    
+    // Add user message immediately
+    const userMessage = { from: 'user', text };
+    setMessages((old) => [...old, userMessage]);
     setInput('');
+    
+    try {
+      const aiUrl = import.meta.env.VITE_AI_URL || 'http://localhost:5001/api/ai';
+      const response = await fetch(`${aiUrl}/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: [...messages, userMessage] })
+      });
+      
+      const data = await response.json();
+      setMessages((old) => [...old, { from: 'ai', text: data.reply || 'Error generating response.' }]);
+    } catch (error) {
+      setMessages((old) => [...old, { from: 'ai', text: 'Connection to AI Core failed. Is the backend running?' }]);
+    }
   }
 
   return (

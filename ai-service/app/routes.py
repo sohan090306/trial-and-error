@@ -6,6 +6,7 @@ from .engine import (
     fatigue_detection,
     future_body_prediction,
     workout_plan,
+    chat_with_groq,
 )
 
 ai = Blueprint("ai", __name__)
@@ -34,3 +35,8 @@ def crowd():
 @ai.post("/future-body")
 def future_body():
     return future_body_prediction(request.json or {})
+
+
+@ai.post("/chat")
+def chat():
+    return chat_with_groq(request.json or {})

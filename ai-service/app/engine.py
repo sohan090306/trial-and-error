@@ -1,5 +1,7 @@
 import math
+import os
 from datetime import datetime
+from groq import Groq
 
 
 def workout_plan(profile):
@@ -74,3 +76,36 @@ def future_body_prediction(profile):
         "90Days": {"weight": round(current_weight - 5.4 * consistency, 1), "aura": round(78 + 13 * consistency)},
         "180Days": {"weight": round(current_weight - 9.5 * consistency, 1), "aura": round(84 + 15 * consistency)},
     }
+
+
+def chat_with_groq(payload):
+    messages = payload.get("messages", [])
+    if not messages:
+        return {"reply": "I'm here to help with your fitness journey."}
+    
+    api_key = os.environ.get("GROQ_API_KEY")
+    if not api_key:
+        return {"reply": "Error: GROQ_API_KEY is not set in the environment."}
+        
+    try:
+        client = Groq(api_key=api_key)
+        # Format messages for the Groq API (role and content)
+        formatted_messages = [
+            {"role": "system", "content": "You are NexaFit AI, a world-class fitness and nutrition coach. Give concise, highly effective advice based on sports science. Keep responses under 3 sentences unless specifically asked for details."}
+        ]
+        for msg in messages:
+            formatted_messages.append({
+                "role": "assistant" if msg.get("from") == "ai" else "user",
+                "content": msg.get("text", "")
+            })
+            
+        completion = client.chat.completions.create(
+            model="llama3-8b-8192",
+            messages=formatted_messages,
+            temperature=0.7,
+            max_tokens=256,
+            top_p=1,
+        )
+        return {"reply": completion.choices[0].message.content}
+    except Exception as e:
+        return {"reply": f"Sorry, I encountered an error connecting to the neural network: {str(e)}"}
